@@ -148,52 +148,23 @@
     return result.data;
   }
 
-  // async function createAttachment(entityType, entityId, file) {
-  //   var user = await requireUser();
-  //   var row = {
-  //     owner_id: user.id,
-  //     entity_type: entityType,
-  //     entity_id: entityId,
-  //     bucket_id: file.bucketId,
-  //     storage_path: file.storagePath,
-  //     file_name: file.name || 'file',
-  //     file_size: Math.round(number(file.size)),
-  //     mime_type: file.type || 'application/octet-stream'
-  //   };
-  //   var result = await client.from('attachments').insert(row).select().single();
-  //   fail(result.error);
-  //   return result.data;
-  // }
-
   async function createAttachment(entityType, entityId, file) {
-  var user = await requireUser();
+    var user = await requireUser();
+    var row = {
+      owner_id: user.id,
+      entity_type: entityType,
+      entity_id: entityId,
+      bucket_id: file.bucketId,
+      storage_path: file.storagePath,
+      file_name: file.name || 'file',
+      file_size: Math.round(number(file.size)),
+      mime_type: file.type || 'application/octet-stream'
+    };
+    var result = await client.from('attachments').insert(row);
+    fail(result.error);
+    return row;
+  }
 
-  console.log('ATTACHMENT DEBUG:', {
-    userId: user.id,
-    entityType: entityType,
-    entityId: entityId,
-    bucketId: file.bucketId,
-    storagePath: file.storagePath
-  });
-
-  var row = {
-    owner_id: user.id,
-    entity_type: entityType,
-    entity_id: entityId,
-    bucket_id: file.bucketId,
-    storage_path: file.storagePath,
-    file_name: file.name || 'file',
-    file_size: Math.round(number(file.size)),
-    mime_type: file.type || 'application/octet-stream'
-  };
-
-  var result = await client.from('attachments').insert(row).select().single();
-
-  console.log('ATTACHMENT RESULT:', result);
-
-  fail(result.error);
-  return result.data;
-}
 
   async function createRfq(rfq) {
     var user = await requireUser();
